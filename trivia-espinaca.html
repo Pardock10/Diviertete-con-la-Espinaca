@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Trivia de la Espinaca</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e8f5e9;
+      text-align: center;
+      padding: 30px;
+    }
+    .quiz-container {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      color: #2e7d32;
+    }
+    .question {
+      font-size: 20px;
+      margin: 20px 0;
+    }
+    .option {
+      background: #c8e6c9;
+      padding: 10px;
+      margin: 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option:hover {
+      background: #a5d6a7;
+    }
+    .correct {
+      background: #81c784 !important;
+    }
+    .wrong {
+      background: #ef9a9a !important;
+    }
+    #next-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #388e3c;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+    }
+    #result {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>🌱 Trivia de la Espinaca</h1>
+    <div id="quiz">
+      <div id="question" class="question"></div>
+      <div id="options"></div>
+      <button id="next-btn">Siguiente</button>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "¿Qué tipo de alimento es la espinaca?",
+        options: ["Fruta", "Verdura de hoja verde", "Cereal"],
+        correct: 1
+      },
+      {
+        question: "¿Qué nutriente se asocia mucho con la espinaca?",
+        options: ["Vitamina C", "Hierro", "Calcio"],
+        correct: 1
+      },
+      {
+        question: "¿Cuál es el origen de la espinaca?",
+        options: ["Asia", "Europa", "África"],
+        correct: 0
+      },
+      {
+        question: "¿Qué personaje famoso hizo popular la espinaca?",
+        options: ["Mickey Mouse", "Popeye", "Superman"],
+        correct: 1
+      },
+      {
+        question: "¿Cómo se puede consumir la espinaca?",
+        options: ["Cruda en ensaladas", "Cocida en sopas", "En batidos", "Todas las anteriores"],
+        correct: 3
+      }
+    ];
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const nextBtn = document.getElementById("next-btn");
+    const resultEl = document.getElementById("result");
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = quizData[currentQuestion];
+      questionEl.textContent = q.question;
+      optionsEl.innerHTML = "";
+      q.options.forEach((option, index) => {
+        const btn = document.createElement("div");
+        btn.textContent = option;
+        btn.classList.add("option");
+        btn.onclick = () => checkAnswer(index, btn);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(index, btn) {
+      const q = quizData[currentQuestion];
+      if (index === q.correct) {
+        btn.classList.add("correct");
+        score++;
+      } else {
+        btn.classList.add("wrong");
+      }
+      Array.from(optionsEl.children).forEach((b, i) => {
+        b.style.pointerEvents = "none";
+        if (i === q.correct) b.classList.add("correct");
+      });
+      nextBtn.style.display = "block";
+    }
+
+    nextBtn.onclick = () => {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+        nextBtn.style.display = "none";
+      } else {
+        showResult();
+      }
+    };
+
+    function showResult() {
+      questionEl.style.display = "none";
+      optionsEl.style.display = "none";
+      nextBtn.style.display = "none";
+      resultEl.textContent = `✅ Juego terminado. Tu puntaje: ${score} de ${quizData.length}`;
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
